@@ -1,48 +1,39 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using TurretWhacker.Config;
 
 namespace TurretWhacker;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-//[BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.HardDependency)]
-//[LobbyCompatibility(CompatibilityLevel.ClientOnly, VersionStrictness.None)]
 public class TurretWhacker : BaseUnityPlugin
 {
     public static TurretWhacker Instance { get; private set; } = null!;
+    internal static PluginConfig PluginConfig { get; private set; } = null!;
     internal new static ManualLogSource Logger { get; private set; } = null!;
     internal static Harmony? Harmony { get; set; }
 
+    [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Invoked by Unity")]
     private void Awake()
     {
         Logger = base.Logger;
         Instance = this;
+        PluginConfig = new(Config);
 
         Patch();
 
-        Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
+        Logger.LogDebug($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }
 
     internal static void Patch()
     {
         Harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-        Logger.LogInfo("Patching...");
+        Logger.LogDebug("Patching...");
 
         Harmony.CreateAndPatchAll(typeof(Patches.TurretPatch));
 
-        Logger.LogInfo("Finished patching!");
+        Logger.LogDebug("Finished patching!");
     }
-
-    internal static void Unpatch()
-    {
-        Logger.LogInfo("Unpatching...");
-
-        Harmony?.UnpatchSelf();
-
-        Logger.LogInfo("Finished unpatching!");
-    }
-
-
 }
