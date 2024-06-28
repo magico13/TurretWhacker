@@ -1,0 +1,9 @@
+{
+    "name": "TurretWhacker",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/magico13/TurretWhacker",
+    "description": "Tweaks how turrets behave when hit. Usually disables them, sometimes doesn't!",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
